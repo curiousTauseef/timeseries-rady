@@ -1,0 +1,35 @@
+
+% Table created by stargazer v.5.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
+% Date and time: Mon, Mar 20, 2017 - 10:12:40
+% Requires LaTeX packages: dcolumn 
+\begin{table}[!htbp] \centering 
+  \caption{Results} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lD{.}{.}{-3} D{.}{.}{-3} } 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{2}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-3} 
+\\[-1.8ex] & \multicolumn{2}{c}{Inflation.rate} \\ 
+\\[-1.8ex] & \multicolumn{1}{c}{(1)} & \multicolumn{1}{c}{(2)}\\ 
+\hline \\[-1.8ex] 
+ SPF.t.t.1. & 0.958^{***} &  \\ 
+  & (0.054) &  \\ 
+  & & \\ 
+ Greenbook.t.t.1. &  & 0.891^{***} \\ 
+  &  & (0.051) \\ 
+  & & \\ 
+ Constant & 0.115 & 0.469^{**} \\ 
+  & (0.233) & (0.219) \\ 
+  & & \\ 
+\hline \\[-1.8ex] 
+Observations & \multicolumn{1}{c}{169} & \multicolumn{1}{c}{169} \\ 
+R$^{2}$ & \multicolumn{1}{c}{0.656} & \multicolumn{1}{c}{0.649} \\ 
+Adjusted R$^{2}$ & \multicolumn{1}{c}{0.654} & \multicolumn{1}{c}{0.647} \\ 
+Residual Std. Error (df = 167) & \multicolumn{1}{c}{1.457} & \multicolumn{1}{c}{1.472} \\ 
+F Statistic (df = 1; 167) & \multicolumn{1}{c}{319.083$^{***}$} & \multicolumn{1}{c}{309.332$^{***}$} \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{2}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table} 

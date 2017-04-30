@@ -1,0 +1,49 @@
+*! foreval.ado  version 4.0.0      Robert A. Yaffee  yaffee@nyu.edu  New York University
+{smcl}
+
+{cmd:help foreval}
+
+{hline}
+
+
+{title:foreval}
+
+
+
+{p2colset 5 18 20 1}
+{p2col:{hi:foreval} assesses forecasts in terms of difference from the baseline
+of a naive random walk, directional accuracy, weak rationality, along with 
+measures of absolute and relative accuracy{p_end}. 
+
+{title:Description:}  Foreval is a post-estimation program to evaluate an {it:ex ante}
+forecast, which is a forecast beyond the end of the data.  Without a "gold standard" 
+of comparison, we it use a naive forecast of a random walk as a basis of compairson.  
+This program generates a raandom walk from the last value of the actual data with 
+a prescribed seed for the purpose of replication.  The user is free to use his 
+own seed by replacing the one used in the foreval.ado program.
+
+
+
+Difference between forevalu.do and foreval.do
+The simple uncorrected program forevalu.do obtains the mean 
+    by dividing the sum by T
+The foreval.do corrects for degrees of freedom of the ARIMA model
+    To obtain the mean, it divides by T-p
+
+foreval.do runs a degree of freedom corrected mean 
+forevalu.do runs an uncorrected df mean
+
+Use these instructions for both programs:
+
+1. Before running foreval
+   1. tsappend, add(#) where # = number of periods over which to forecast
+   1. generate the forecast and name the forecast, forecast
+      use the command predict forecast 
+1. run the program foreval.
+   a.  do foreval
+   b.  foreval seriesname
+          where seriesname is the name of the series being analyzed.
+          seriesname is the series after it has been transformed to 
+          stationarity
+   c.  ignore missing value notes (this is the ex ante area where foreval
+          cannot be computed).

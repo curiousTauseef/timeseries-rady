@@ -1,0 +1,63 @@
+---
+title: "Rady - Assignment 1"
+author: "Anton Prokopyev, Thomas Murphey"
+date: "January 21, 2017"
+output: 
+  html_document: 
+    highlight: pygments
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Part 1. Constructing prediction models for different variables
+The file time_series_data_2017.xlsx in the Assignment 1 folder on TED contains monthly data on US consumer prices (CPIAUCSL), gold prices (GOLD prices), the unemployment rate (UNRATE) and the S&P500 index. You are asked to analyze each of the four time series and explore if they are stationary as well as predictable.
+
+```{rsetup}
+rm(list = ls())
+library(tseries)
+library(rJava)
+library(xlsx)
+library(knitr)
+```
+
+```{dataload}
+data.ts = read.xlsx('time_series_data_2017.xlsx',1,rowIndex = 11:826,colIndex = 1:2)
+```
+
+## Question 1.	
+Produce a time-series plot for each variable. Comment on whether they are trending over time or not. If the variable is trending, then compute the log-first difference, Δlog(yt) = log(yt) – log(yt-1), plot the transformed series, and use this in the further analysis. The log first-difference is the inflation rate for the CPIUCSL series. For gold prices and stock prices, the log-first difference is the continuously compounded rate of return. [Hint: As an option to test if a variable is stationary or is non-stationary and needs to be first-differenced, you can also compute an (augmented) Dickey-Fuller test.]
+
+```{plotdataraw, echo=FALSE}
+plot(data.ts$observation_date, data.ts$UNRATE, xlab = 'Date', ylab = 'Unemployment', type='l')
+```
+
+```{augmentedDickeyFuller, results="show"}
+unrate = data.ts$UNRATE
+pvalue = adf.test(unrate,k=1)$p.value
+print(pvalue)
+kable(print(pvalue), caption = "Title of the table")
+```
+
+## Question 2.
+Using the raw or transformed series, report the first 10 autocorrelations. Is the variable persistent? Is the serial correlation statistically significant? [hint: use the autocorr command in matlab]
+
+# Plot the autocorrelation function for the first 10 lags
+acf(unrate)
+
+# Display the autocorrelations
+unrateAutocorrs = acf(unrate)$acf
+plot(unrate.autocorrs)
+
+#Perform LBQ tests for significance of autocorrelations
+Box.test(unrate, lag = 1)
+Box.test(unrate, lag = 10)
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{plot1, echo=FALSE}
+plot(pressure)
+```

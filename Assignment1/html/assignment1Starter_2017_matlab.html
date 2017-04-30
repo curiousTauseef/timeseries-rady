@@ -1,0 +1,781 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>assignment1Starter_2017_matlab</title><meta name="generator" content="MATLAB 9.1"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2017-01-21"><meta name="DC.source" content="assignment1Starter_2017_matlab.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h2>Contents</h2><div><ul><li><a href="#2">Part I. Constructing prediction models for different variables</a></li></ul></div><pre class="codeinput"><span class="comment">% Assignment 1 starter code</span>
+
+<span class="comment">% This file contains a partial solution to assignment 1 with examples of</span>
+<span class="comment">% how to use all of the major MATLAB functions necessary for completion of</span>
+<span class="comment">% the assignment</span>
+
+<span class="comment">% Usually good practice to start MATLAB scripts with these commands</span>
+clear <span class="string">all</span> <span class="comment">% deletes all variables in memory</span>
+close <span class="string">all</span> <span class="comment">% closes all plot windows</span>
+clc <span class="comment">% clears the command line</span>
+</pre><h2 id="2">Part I. Constructing prediction models for different variables</h2><pre class="codeinput"><span class="comment">% Read in data</span>
+
+<span class="comment">% The data for Part I is contained in the Excel file</span>
+<span class="comment">% "time_series_data_updated.xlsx." Each sheet contains one of the 4</span>
+<span class="comment">% different time series the question asks you to work with. As an example I</span>
+<span class="comment">% will work through this part with the unemployment rate, which is in the</span>
+<span class="comment">% first sheet</span>
+
+<span class="comment">% Example use of xlsread command</span>
+<span class="comment">% 1st argument: name of Excel file in single quotes</span>
+<span class="comment">% 2nd argument (optional): sheet number to read in</span>
+<span class="comment">% Type 'help xlsread' for more info</span>
+data = xlsread(<span class="string">'time_series_data_2017.xlsx'</span>,1);
+
+<span class="comment">% Second column of data is the unemployment rate</span>
+<span class="comment">% NOTE: If for some reason you convert the Excel file to .xls format</span>
+<span class="comment">% instead of .xlsx format, xlsread will throw away the first column because</span>
+<span class="comment">% the dates are in a format it doesn't recognize. In this case this extra</span>
+<span class="comment">% step isn't necessary</span>
+urate = data(:,2);
+
+<span class="comment">% Create date vector</span>
+timeVec = (1948:1/12:2016+10/12)';
+
+<span class="comment">% Question 1</span>
+
+<span class="comment">% Plot raw data</span>
+
+<span class="comment">% Creates a new figure object. This is necessary when creating multiple</span>
+<span class="comment">% figures to avoid deleting previously created figures.</span>
+figure
+<span class="comment">% plot function used this way plots the first argument on the x-axis and</span>
+<span class="comment">% the second argument on the y-axis. There are many optional arguments. See</span>
+<span class="comment">% help file for more details</span>
+plot(timeVec,urate)
+<span class="comment">% This just tightens the window so that there's no white space on the</span>
+<span class="comment">% sides. MATLAB tends to create more space than needed.</span>
+xlim([timeVec(1) timeVec(end)])
+<span class="comment">% These commands just create labels for the x and y axes</span>
+xlabel(<span class="string">'Time'</span>)
+ylabel(<span class="string">'Unemployment rate'</span>)
+
+<span class="comment">% Augmented Dickey-Fuller test for non-stationarity</span>
+<span class="comment">% A value of h = 0 indicates that we shouldn't reject the null hypothesis</span>
+<span class="comment">% of non-stationarity. A value of h = 1 indicates we should reject the null</span>
+<span class="comment">% hypohtesis. That is, h = 0 corresponds to a non-stationary series while</span>
+<span class="comment">% h = 1 corresponds to a stationary series.</span>
+<span class="comment">% Despite getting a value of h = 0 for the test, most economists DO NOT</span>
+<span class="comment">% first difference the unemployment rate. However, for the purposes of this</span>
+<span class="comment">% assignment either is fine</span>
+[h,pValue] = adftest(urate)
+
+<span class="comment">% Question 2</span>
+
+<span class="comment">% Plot the autocorrelation function for the first 10 lags</span>
+figure
+autocorr(urate,10)
+xlim([0 10])
+
+<span class="comment">% Display the first 10 autocorrelations</span>
+urateAutocorrs = autocorr(urate,10)
+
+<span class="comment">% Perform LBQ tests for significance of autocorrelations</span>
+disp(<span class="string">'Unemployment rate serial correlation tests'</span>)
+disp(<span class="string">'1 lag'</span>)
+[h,pValue] = lbqtest(urate,<span class="string">'lags'</span>,1)
+disp(<span class="string">'10 lags'</span>)
+[h,pValue] = lbqtest(urate,<span class="string">'lags'</span>,10)
+
+<span class="comment">% Question 3</span>
+
+<span class="comment">% Test out different combinations of AR and MA terms and use AIC and BIC to</span>
+<span class="comment">% determine fit</span>
+maxAR = 4; <span class="comment">% max of 4 AR terms</span>
+maxMA = 4; <span class="comment">% max of 4 MA terms</span>
+
+urateModelCriteria = zeros((maxAR+1)*(maxMA+1)-1,2);
+ind = 1;
+lagCombinations = urateModelCriteria;
+
+<span class="comment">% Double for loop over AR and MA lags</span>
+<span class="comment">% Good practice to use 'ii' instead of 'i' as loop index (like in other</span>
+<span class="comment">% programming languages) because MATLAB stores 'i' as the imaginary</span>
+<span class="comment">% constant sqrt(-1).</span>
+<span class="keyword">for</span> ii = 0:maxAR
+    <span class="keyword">for</span> jj = 0:maxMA
+        <span class="keyword">if</span> ii ~= 0 || jj ~= 0
+            <span class="comment">% Create ARIMA model object with 'ii' AR terms and 'jj' MA terms</span>
+            model = arima(ii,0,jj);
+            <span class="comment">% Estimate ARIMA model and save maximized value of log likelihood</span>
+            [~,~,logL] = estimate(model,urate);
+            <span class="comment">% Compute corresponding AIC and BIC values</span>
+            urateModelCriteria(ind,:) = aicbic(logL,ii+jj,length(urate)-max(ii,jj));
+            lagCombinations(ind,:) = [ii jj];
+            ind = ind + 1;
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">% Find models with lowest AIC and BIC criteria, corresponding to best</span>
+<span class="comment">% statistical fit</span>
+[~,minIndices] = min(urateModelCriteria);
+
+<span class="comment">% Store the number of AR and MA terms associated with best model according</span>
+<span class="comment">% to AIC</span>
+bestAICModelLags = lagCombinations(minIndices(1),:);
+
+<span class="comment">% Question 4</span>
+
+<span class="comment">% Estimate model chosen by AIC</span>
+model = arima(bestAICModelLags(1,1),0,bestAICModelLags(1,2));
+modelEstimate = estimate(model,urate);
+
+<span class="comment">% Compute residuals from fitted ARMA model using 'infer' command</span>
+resid = infer(modelEstimate,urate);
+<span class="comment">% Test residuals for serial correlation</span>
+[h,pValue] = lbqtest(resid,<span class="string">'lags'</span>,10)
+<span class="comment">% Visually inspect fitted residuals</span>
+figure
+plot(timeVec,resid)
+xlim([timeVec(1) timeVec(end)])
+
+<span class="comment">% Construct fitted values from model residuals and original time series</span>
+urateFit = urate - resid;
+
+<span class="comment">% Plot time series and fitted values</span>
+figure
+plot(timeVec,[urateFit urate])
+legend(<span class="string">'Fitted values'</span>,<span class="string">'Data'</span>)
+xlim([timeVec(1) timeVec(end)])
+</pre><pre class="codeoutput">
+h =
+
+  logical
+
+   0
+
+
+pValue =
+
+    0.5162
+
+
+urateAutocorrs =
+
+    1.0000
+    0.9901
+    0.9788
+    0.9629
+    0.9433
+    0.9202
+    0.8939
+    0.8657
+    0.8369
+    0.8069
+    0.7762
+
+Unemployment rate serial correlation tests
+1 lag
+
+h =
+
+  logical
+
+   1
+
+
+pValue =
+
+     0
+
+10 lags
+
+h =
+
+  logical
+
+   1
+
+
+pValue =
+
+     0
+
+ 
+    ARIMA(0,0,1) Model:
+    --------------------
+    Conditional Probability Distribution: Gaussian
+
+                                  Standard          t     
+     Parameter       Value          Error       Statistic 
+    -----------   -----------   ------------   -----------
+     Constant        5.78875     0.0626604        92.3829
+        MA{1}        0.91561     0.0133247        68.7153
+     Variance       0.805437     0.0406695        19.8044
+ 
+    ARIMA(0,0,2) Model:
+    --------------------
+    Conditional Probability Distribution: Gaussian
+
+                                  Standard          t     
+     Parameter       Value          Error       Statistic 
+    -----------   -----------   ------------   -----------
+     Constant        5.76282     0.0603171        95.5421
+        MA{1}        1.37659     0.0175223        78.5622
+        MA{2}       0.759239     0.0186651         40.677
+     Variance        0.36045     0.0162159        22.2282
+ 
+    ARIMA(0,0,3) Model:
+    --------------------
+    Conditional Probability Distribution: Gaussian
+
+                                  Standard          t     
+     Parameter       Value          Error       Statistic 
+    -----------   -----------   ------------   -----------
+     Constant        5.69407     0.0560215        101.641
+        MA{1}        1.51777      0.019205        79.0297
+        MA{2}        1.36906     0.0275015        49.7813
+        MA{3}       0.662242     0.0217076        30.5073
+     Variance       0.204815    0.00802654        25.5172
+Warning: Upper bound constraints are active; standard errors may be inaccurate. 
+ 
+    ARIMA(0,0,4) Model:
+    --------------------
+    Conditional Probability Distribution: Gaussian
+
+                                  Standard          t     
+     Parameter       Value          Error       Statistic 
+    -----------   -----------   ------------   -----------
+     Constant        5.70001     0.0534019        106.738
+        MA{1}        1.41928     0.0225639        62.9003
+        MA{2}        1.47228     0.0406419        36.2257
+        MA{3}              1     0.0462362        21.6281
+        MA{4}       0.448249      0.030966        14.4755
+     Variance        0.15202    0.00562903        27.0064
+ 
+    ARIMA(1,0,0) Model:
+    --------------------
+    Conditional Probability Distribution: Gaussian
+
+                                  Standard          t     
+     Parameter       Value          Error       Statistic 
+    -----------   -----------   ------------   -----------
+     Constant      0.0546853     0.0287413        1.90267
+        AR{1}       0.990824     0.0044854          220.9
+     Variance      0.0441716    0.00113567        38.8948
+ 
+    ARIMA(1,0,1) Model:
+    --------------------
+    Conditional Probability Distribution: Gaussian
+
+                                  Standard          t     
+     Parameter       Value          Error       Statistic 
+    -----------   -----------   ------------   -----------
+     Constant      0.0615954     0.0312638        1.97018
+        AR{1}       0.989617    0.00496747         199.22
+        MA{1}      0.0803988     0.0213308        3.76913
+     Variance      0.0437435    0.00123414        35.4445
+ 
+    ARIMA(1,0,2) Model:
+    --------------------
+    Conditional Probability Distribution: Gaussian
+
+                                  Standard          t     
+     Parameter       Value          Error       Statistic 
+    -----------   -----------   ------------   -----------
+     Constant      0.0773845      0.034952        2.21402
+        AR{1}       0.986865     0.0055888        176.579
+        MA{1}      0.0420242     0.0223208        1.88274
+        MA{2}       0.235011     0.0331977        7.07913
+     Variance      0.0410197    0.00126357        32.4633
+ 
+    ARIMA(1,0,3) Model:
+    --------------------
+    Conditional Probability Distribution: Gaussian
+
+                                  Standard          t     
+     Parameter       Value          Error       Statistic 
+    -----------   -----------   ------------   -----------
+     Constant      0.0883421      0.037339        2.36594
+        AR{1}       0.985001    0.00602073        163.602
+        MA{1}      0.0401093      0.022916        1.75028
+        MA{2}       0.204102      0.033361          6.118
+        MA{3}       0.134568     0.0340517        3.95189
+     Variance      0.0402837    0.00120099        33.5419
+ 
+    ARIMA(1,0,4) Model:
+    --------------------
+    Conditional Probability Distribution: Gaussian
+
+                                  Standard          t     
+     Parameter       Value          Error       Statistic 
+    -----------   -----------   ------------   -----------
+     Constant       0.102864     0.0403198         2.5512
+        AR{1}       0.982552    0.00653497        150.353
+        MA{1}       0.015132     0.0232519       0.650786
+        MA{2}         0.2199     0.0336273        6.53934
+        MA{3}       0.134285     0.0325976        4.11949
+        MA{4}       0.131267     0.0373683        3.51279
+     Variance       0.039525    0.00122391        32.2939
+ 
+    ARIMA(2,0,0) Model:
+    --------------------
+    Conditional Probability Distribution: Gaussian
+
+                                  Standard          t     
+     Parameter       Value          Error       Statistic 
+    -----------   -----------   ------------   -----------
+     Constant      0.0599594     0.0288818        2.07603
+        AR{1}        1.11396     0.0207652        53.6455
+        AR{2}       -0.12407     0.0209893       -5.91109
+     Variance      0.0434943    0.00120027        36.2373
+ 
+    ARIMA(2,0,1) Model:
+    --------------------
+    Conditional Probability Distribution: Gaussian
+
+                                  Standard          t     
+     Parameter       Value          Error       Statistic 
+    -----------   -----------   ------------   -----------
+     Constant       0.116264     0.0542958        2.14131
+        AR{1}      0.0672034     0.0106052         6.3368
+        AR{2}       0.913487    0.00862155        105.954
+        MA{1}       0.967227     0.0083419        115.948
+     Variance      0.0436879    0.00134279        32.5352
+ 
+    ARIMA(2,0,2) Model:
+    --------------------
+    Conditional Probability Distribution: Gaussian
+
+                                  Standard          t     
+     Parameter       Value          Error       Statistic 
+    -----------   -----------   ------------   -----------
+     Constant      0.0371575      0.010189        3.64682
+        AR{1}        1.82967     0.0256801        71.2484
+        AR{2}      -0.836077     0.0254809        -32.812
+        MA{1}      -0.837506     0.0360705       -23.2186
+        MA{2}       0.221347     0.0276085        8.01733
+     Variance      0.0377908    0.00118258        31.9563
+ 
+    ARIMA(2,0,3) Model:
+    --------------------
+    Conditional Probability Distribution: Gaussian
+
+                                  Standard          t     
+     Parameter       Value          Error       Statistic 
+    -----------   -----------   ------------   -----------
+     Constant      0.0379093      0.010831        3.50007
+        AR{1}        1.82536     0.0343338        53.1652
+        AR{2}      -0.831902     0.0338737       -24.5589
+        MA{1}      -0.832478     0.0430289       -19.3469
+        MA{2}         0.2127     0.0368954        5.76493
+        MA{3}       0.012974     0.0423947       0.306028
+     Variance       0.037786     0.0011853         31.879
+ 
+    ARIMA(2,0,4) Model:
+    --------------------
+    Conditional Probability Distribution: Gaussian
+
+                                  Standard          t     
+     Parameter       Value          Error       Statistic 
+    -----------   -----------   ------------   -----------
+     Constant      0.0433636     0.0124773        3.47539
+        AR{1}        1.79847     0.0404606        44.4499
+        AR{2}       -0.80595     0.0399221       -20.1881
+        MA{1}      -0.813752     0.0466818       -17.4319
+        MA{2}       0.236698     0.0372232        6.35889
+        MA{3}      -0.045177     0.0481615      -0.938031
+        MA{4}      0.0796002     0.0371333        2.14363
+     Variance      0.0376159    0.00120162        31.3042
+ 
+    ARIMA(3,0,0) Model:
+    --------------------
+    Conditional Probability Distribution: Gaussian
+
+                                  Standard          t     
+     Parameter       Value          Error       Statistic 
+    -----------   -----------   ------------   -----------
+     Constant      0.0723885     0.0269249        2.68854
+        AR{1}        1.07879     0.0211764        50.9429
+        AR{2}       0.199701     0.0396765        5.03322
+        AR{3}      -0.290857     0.0309433       -9.39968
+     Variance      0.0398431    0.00120673        33.0174
+ 
+    ARIMA(3,0,1) Model:
+    --------------------
+    Conditional Probability Distribution: Gaussian
+
+                                  Standard          t     
+     Parameter       Value          Error       Statistic 
+    -----------   -----------   ------------   -----------
+     Constant      0.0430871     0.0117982          3.652
+        AR{1}        1.57208     0.0505619        31.0921
+        AR{2}      -0.338282     0.0792724       -4.26734
+        AR{3}      -0.241222     0.0336818       -7.16179
+        MA{1}      -0.569851     0.0524464       -10.8654
+     Variance      0.0378788    0.00118929        31.8499
+ 
+    ARIMA(3,0,2) Model:
+    --------------------
+    Conditional Probability Distribution: Gaussian
+
+                                  Standard          t     
+     Parameter       Value          Error       Statistic 
+    -----------   -----------   ------------   -----------
+     Constant      0.0338001     0.0102927         3.2839
+        AR{1}        1.95837      0.161108        12.1556
+        AR{2}       -1.08274      0.312935       -3.45994
+        AR{3}       0.118532      0.153396       0.772718
+        MA{1}      -0.963581      0.160236        -6.0135
+        MA{2}       0.319051      0.130855        2.43821
+     Variance      0.0377921     0.0011852        31.8867
+ 
+    ARIMA(3,0,3) Model:
+    --------------------
+    Conditional Probability Distribution: Gaussian
+
+                                  Standard          t     
+     Parameter       Value          Error       Statistic 
+    -----------   -----------   ------------   -----------
+     Constant      0.0739969     0.0198595        3.72602
+        AR{1}       0.883513     0.0252483        34.9929
+        AR{2}       0.900531     0.0147222        61.1681
+        AR{3}      -0.796776     0.0268362       -29.6904
+        MA{1}       0.129601     0.0379957        3.41095
+        MA{2}      -0.613857     0.0377055       -16.2803
+        MA{3}       0.238739     0.0285574        8.35997
+     Variance      0.0370225    0.00119042        31.1004
+ 
+    ARIMA(3,0,4) Model:
+    --------------------
+    Conditional Probability Distribution: Gaussian
+
+                                  Standard          t     
+     Parameter       Value          Error       Statistic 
+    -----------   -----------   ------------   -----------
+     Constant      0.0726992     0.0202828        3.58427
+        AR{1}       0.887334     0.0322115        27.5471
+        AR{2}        0.90007     0.0146942        61.2535
+        AR{3}      -0.799914     0.0327449       -24.4287
+        MA{1}       0.125422     0.0439363        2.85463
+        MA{2}      -0.611046     0.0380526       -16.0579
+        MA{3}       0.235431     0.0324718        7.25032
+        MA{4}     -0.0108641     0.0414982      -0.261796
+     Variance      0.0370189    0.00118978        31.1141
+ 
+    ARIMA(4,0,0) Model:
+    --------------------
+    Conditional Probability Distribution: Gaussian
+
+                                  Standard          t     
+     Parameter       Value          Error       Statistic 
+    -----------   -----------   ------------   -----------
+     Constant      0.0834877     0.0262152        3.18471
+        AR{1}        1.02347     0.0216312        47.3145
+        AR{2}       0.238168     0.0411087        5.79363
+        AR{3}      -0.087429     0.0508892       -1.71803
+        AR{4}      -0.188547     0.0315438       -5.97732
+     Variance      0.0384407     0.0012241        31.4032
+ 
+    ARIMA(4,0,1) Model:
+    --------------------
+    Conditional Probability Distribution: Gaussian
+
+                                  Standard          t     
+     Parameter       Value          Error       Statistic 
+    -----------   -----------   ------------   -----------
+     Constant      0.0494334     0.0151314        3.26693
+        AR{1}        1.49987     0.0945095        15.8701
+        AR{2}      -0.277218      0.102867       -2.69492
+        AR{3}      -0.175701     0.0762324       -2.30481
+        AR{4}     -0.0554681     0.0571318       -0.97088
+        MA{1}      -0.504352     0.0950493       -5.30621
+     Variance      0.0378224    0.00119445         31.665
+ 
+    ARIMA(4,0,2) Model:
+    --------------------
+    Conditional Probability Distribution: Gaussian
+
+                                  Standard          t     
+     Parameter       Value          Error       Statistic 
+    -----------   -----------   ------------   -----------
+     Constant      0.0865474     0.0231044        3.74592
+        AR{1}       0.611666     0.0466956         13.099
+        AR{2}        1.15582     0.0311942        37.0525
+        AR{3}       -0.52397      0.049918       -10.4966
+        AR{4}      -0.258405      0.032534       -7.94259
+        MA{1}       0.408225      0.050463        8.08958
+        MA{2}      -0.559657     0.0514621       -10.8751
+     Variance      0.0371004    0.00126081        29.4259
+ 
+    ARIMA(4,0,3) Model:
+    --------------------
+    Conditional Probability Distribution: Gaussian
+
+                                  Standard          t     
+     Parameter       Value          Error       Statistic 
+    -----------   -----------   ------------   -----------
+     Constant      0.0878808      0.024287        3.61842
+        AR{1}       0.651114     0.0288032        22.6056
+        AR{2}       0.487707     0.0128565        37.9346
+        AR{3}        0.69737     0.0115974        60.1315
+        AR{4}      -0.851316     0.0271383       -31.3695
+        MA{1}       0.487043     0.0437834        11.1239
+        MA{2}      0.0667934     0.0535992        1.24616
+        MA{3}      -0.717233     0.0433471       -16.5463
+     Variance      0.0375195    0.00121652        30.8418
+Warning: Lower bound constraints are active; standard errors may be inaccurate. 
+Warning: Nonlinear inequality constraints are active; standard errors may be
+inaccurate. 
+ 
+    ARIMA(4,0,4) Model:
+    --------------------
+    Conditional Probability Distribution: Gaussian
+
+                                  Standard          t     
+     Parameter       Value          Error       Statistic 
+    -----------   -----------   ------------   -----------
+     Constant      0.0599802     0.0200164        2.99655
+        AR{1}        1.07787      0.131262        8.21162
+        AR{2}       0.737157      0.112662        6.54311
+        AR{3}             -1      0.137623       -7.26621
+        AR{4}       0.174639       0.12015         1.4535
+        MA{1}     -0.0624705      0.138516      -0.450999
+        MA{2}      -0.652618     0.0368787       -17.6963
+        MA{3}       0.374977      0.101834        3.68222
+        MA{4}     -0.0348751     0.0426201      -0.818277
+     Variance      0.0369636    0.00121134        30.5147
+ 
+    ARIMA(3,0,3) Model:
+    --------------------
+    Conditional Probability Distribution: Gaussian
+
+                                  Standard          t     
+     Parameter       Value          Error       Statistic 
+    -----------   -----------   ------------   -----------
+     Constant      0.0739969     0.0198595        3.72602
+        AR{1}       0.883513     0.0252483        34.9929
+        AR{2}       0.900531     0.0147222        61.1681
+        AR{3}      -0.796776     0.0268362       -29.6904
+        MA{1}       0.129601     0.0379957        3.41095
+        MA{2}      -0.613857     0.0377055       -16.2803
+        MA{3}       0.238739     0.0285574        8.35997
+     Variance      0.0370225    0.00119042        31.1004
+
+h =
+
+  logical
+
+   0
+
+
+pValue =
+
+    0.3949
+
+</pre><img vspace="5" hspace="5" src="assignment1Starter_2017_matlab_01.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="assignment1Starter_2017_matlab_02.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="assignment1Starter_2017_matlab_03.png" style="width:560px;height:420px;" alt=""> <img vspace="5" hspace="5" src="assignment1Starter_2017_matlab_04.png" style="width:560px;height:420px;" alt=""> <p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016b</a><br></p></div><!--
+##### SOURCE BEGIN #####
+% Assignment 1 starter code
+
+% This file contains a partial solution to assignment 1 with examples of
+% how to use all of the major MATLAB functions necessary for completion of
+% the assignment
+
+% Usually good practice to start MATLAB scripts with these commands
+clear all % deletes all variables in memory
+close all % closes all plot windows
+clc % clears the command line
+
+%% Part I. Constructing prediction models for different variables
+
+% Read in data
+
+% The data for Part I is contained in the Excel file
+% "time_series_data_updated.xlsx." Each sheet contains one of the 4
+% different time series the question asks you to work with. As an example I
+% will work through this part with the unemployment rate, which is in the
+% first sheet
+
+% Example use of xlsread command
+% 1st argument: name of Excel file in single quotes
+% 2nd argument (optional): sheet number to read in
+% Type 'help xlsread' for more info
+data = xlsread('time_series_data_2017.xlsx',1);
+
+% Second column of data is the unemployment rate
+% NOTE: If for some reason you convert the Excel file to .xls format
+% instead of .xlsx format, xlsread will throw away the first column because
+% the dates are in a format it doesn't recognize. In this case this extra
+% step isn't necessary
+urate = data(:,2);
+
+% Create date vector
+timeVec = (1948:1/12:2016+10/12)';
+
+% Question 1
+
+% Plot raw data
+
+% Creates a new figure object. This is necessary when creating multiple 
+% figures to avoid deleting previously created figures.
+figure
+% plot function used this way plots the first argument on the x-axis and
+% the second argument on the y-axis. There are many optional arguments. See
+% help file for more details
+plot(timeVec,urate)
+% This just tightens the window so that there's no white space on the
+% sides. MATLAB tends to create more space than needed.
+xlim([timeVec(1) timeVec(end)])
+% These commands just create labels for the x and y axes
+xlabel('Time')
+ylabel('Unemployment rate')
+
+% Augmented Dickey-Fuller test for non-stationarity
+% A value of h = 0 indicates that we shouldn't reject the null hypothesis
+% of non-stationarity. A value of h = 1 indicates we should reject the null
+% hypohtesis. That is, h = 0 corresponds to a non-stationary series while
+% h = 1 corresponds to a stationary series.
+% Despite getting a value of h = 0 for the test, most economists DO NOT
+% first difference the unemployment rate. However, for the purposes of this
+% assignment either is fine
+[h,pValue] = adftest(urate)
+
+% Question 2
+
+% Plot the autocorrelation function for the first 10 lags
+figure
+autocorr(urate,10)
+xlim([0 10])
+
+% Display the first 10 autocorrelations
+urateAutocorrs = autocorr(urate,10)
+
+% Perform LBQ tests for significance of autocorrelations
+disp('Unemployment rate serial correlation tests')
+disp('1 lag')
+[h,pValue] = lbqtest(urate,'lags',1)
+disp('10 lags')
+[h,pValue] = lbqtest(urate,'lags',10)
+
+% Question 3
+
+% Test out different combinations of AR and MA terms and use AIC and BIC to
+% determine fit
+maxAR = 4; % max of 4 AR terms
+maxMA = 4; % max of 4 MA terms
+
+urateModelCriteria = zeros((maxAR+1)*(maxMA+1)-1,2);
+ind = 1;
+lagCombinations = urateModelCriteria;
+
+% Double for loop over AR and MA lags
+% Good practice to use 'ii' instead of 'i' as loop index (like in other
+% programming languages) because MATLAB stores 'i' as the imaginary
+% constant sqrt(-1).
+for ii = 0:maxAR
+    for jj = 0:maxMA
+        if ii ~= 0 || jj ~= 0
+            % Create ARIMA model object with 'ii' AR terms and 'jj' MA terms
+            model = arima(ii,0,jj);
+            % Estimate ARIMA model and save maximized value of log likelihood
+            [~,~,logL] = estimate(model,urate);
+            % Compute corresponding AIC and BIC values
+            urateModelCriteria(ind,:) = aicbic(logL,ii+jj,length(urate)-max(ii,jj));
+            lagCombinations(ind,:) = [ii jj];
+            ind = ind + 1;
+        end
+    end
+end
+
+% Find models with lowest AIC and BIC criteria, corresponding to best
+% statistical fit
+[~,minIndices] = min(urateModelCriteria);
+
+% Store the number of AR and MA terms associated with best model according
+% to AIC
+bestAICModelLags = lagCombinations(minIndices(1),:);
+
+% Question 4
+
+% Estimate model chosen by AIC
+model = arima(bestAICModelLags(1,1),0,bestAICModelLags(1,2));
+modelEstimate = estimate(model,urate);
+
+% Compute residuals from fitted ARMA model using 'infer' command
+resid = infer(modelEstimate,urate);
+% Test residuals for serial correlation
+[h,pValue] = lbqtest(resid,'lags',10)
+% Visually inspect fitted residuals
+figure
+plot(timeVec,resid)
+xlim([timeVec(1) timeVec(end)])
+
+% Construct fitted values from model residuals and original time series
+urateFit = urate - resid;
+
+% Plot time series and fitted values
+figure
+plot(timeVec,[urateFit urate])
+legend('Fitted values','Data')
+xlim([timeVec(1) timeVec(end)])
+##### SOURCE END #####
+--></body></html>

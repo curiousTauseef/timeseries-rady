@@ -1,0 +1,240 @@
+***************************************************************
+*              Oforeval help                                  *
+***************************************************************
+
+*   Prerequisites
+*   1. Construct your segment variable                        *
+*        a.  Segment is coded 0 for the estimation portion    *
+*        b.  Segment is coded 1 for the validation segment    *
+*   2. Fit your model on the estimation segment               *
+*   3. Forecast to the validation segment and save your       *
+*        forecast as oforecast                                *
+***************************************************************
+*   Oforeval syntax                                           *
+*   
+*   1.  run do oforeval                                       *
+*   2.  oforeval has two options                              *
+*       oforeval varname                                      *
+*        a. varname is the variable name of the series being  *
+*           forecast (not oforecast)                          *
+***************************************************************
+*   Specifications of oforecast computations                  *
+*       variances are divided by the length of the forecast   *
+*           horizon, not that length - 1 for out-of-sample    *
+*           evaluation.                                       *
+* *************************************************************
+*! foreval.ado  version 4.0.0      Robert A. Yaffee  yaffee@nyu.edu  New York University
+{smcl}
+
+{cmdab:help oforeval}
+
+{hline}
+
+
+{title:oforeval}
+
+{p2colset 5 18 20 1}
+{hi:foreval} assesses forecasts in terms of forecast bias, Theil-Mincer-Zarnowitz 
+weak forecast rationality, directional accuracy, as well as with measures of 
+absolute and relative accuracy.  It will return the values of the measures 
+in a return list and generate a graph of the {it:ex ante} forecast profile for
+the user.
+
+
+{title:Preprocessing}
+
+Before running oforeval
+   1. tsappend, add(#) where # = number of periods over which to forecast
+   2. generate the forecast with the variable name of forecast
+      use the command predict forecast 
+   3. If the time series model contains regressors,  each of the regressors
+      has to be forecast over the forecast horizon and included in the 
+      model, before the dependent variable can be forecast over that horizon. 
+
+{title:Syntax}
+
+{p 5 10 30}
+{cmd:foreval}  {it:depvar}   {it:forecast origin line number}   {it:ar_max}
+
+{p 5 10}
+where
+
+    {it:depvar} is the variable name of the series to be forecast before the 
+    	forecasting is peformed,
+    	
+    {it:line number at point of the forecast origin} indicates the starting 
+   		point from which forecast evaluates begin, and
+   		 
+    {it:ar_max} is the maximum value of the autoregressive order of the model 
+        and this is used to adjust the assessment 
+        of weak forecast rationality.
+
+{title:Examples}
+
+oforeval dlwpi 116 4
+oforeval ds12lair 120 0
+ 
+
+{title:Description:}  Foreval is a post-estimation program to evaluate an {it:ex ante}
+forecast, which is a forecast beyond the end of the data.  Without a "gold standard" 
+of comparison, foreval uses a naive forecast of a random walk as a basis of compairson.  
+This program generates a raandom walk from the last value of the actual data with 
+a prescribed seed for the purpose of replication.  The user is free to use his 
+own seed by replacing the one used in the foreval.ado program.
+
+     {hi:forecast bias} is assessed using a paired t-test and a Wilcoxon sign-rank
+test, with the latter employed so as to be distribution-free and capable of assessing
+smaller samples.
+
+{title: Theil-Mincer-Zarnowitz test of weak rationality of forecasts}
+    
+	This test is a regression of the forecast upon the actual.   
+Traditionally, this testwas performed with an OLS linear regression.  To avoid bias 
+and misspecification following from heteroskedasticity and serial correlation, I 
+apply a Newey-West regression analysis.  Strong rationality or efficiency would 
+require independence of errors to assess (Hendry and Clements, 1st ed.,56-59).     
+
+     {hi:Weak forecast rationality} is tested with the {bf:Theil-Mincer-Zarnowitz
+test} of forecast rationality.  With forecasts from nonautocorrelated series, this test
+is performed using a White asymptotic heteroskedastically consistent variance
+estimator.  With autocorrelated forecasts, the test is performed with Newey-West
+robust variance estimation.  When a regression is run with:
+        
+        regress actual = constant + forecast
+        
+the actual regressed on the forecast,  weak rationality obtains if the null 
+hypothesis (H0) cannot be rejected.  The H0: b = 1 and constant=0.  A joint F test of
+these conditions is performed to assess the null hypothesis.
+    
+     {hi:Measures of directional accuracy} are used to test whether there is monotoniciity
+between the forecast and the random walk. The Pearson product-moment and Spearman 
+rank correlation are employed in this connection.
+
+     {hi:Measures of forecast accuracy} are used to test the difference between a 
+naive and a random walk forecast.  These measures the deviance from the naive measure.
+If a user has a different forecast criterion, he can substitute that criterion for
+the random walk and obtain a different set of comparisons.   Two types of loss functions
+are employed.  One variety of forecast accuracy measures are based on variations of
+sums of squared errors--which comprise the criterion for optimal forecast error variance
+estimation.  However, the conventional measures overemphasize the distorting influence 
+of outliers.  For this reason, a variety of measures based on the absolute deviation
+from a criterion are used to circumvent this problem.  In addition to the sum 
+of squared errors, the mean square forecast error, and the root mean square forecast 
+error, the mean absolute erroor, the mean absolute percentage error, as well as 
+three versions of the symmetric mean absolute percentage error are thus employed. 
+    
+
+
+{title: Other measures of forecast accuracy}
+   Sum of squared errors over the forecast 
+     horizon............................(sse)   = sum{over h}[forecast-baseline]^2. 
+   Mean square forecast error...........(msfe)  = h^{-1}*sum{over h}[forecast-baseline]^2.
+   Standard deviation of forecast
+     error..............................(rmsfe) = sqrt(h^{-1}*sum{over h}[forecast-baseline]^2).
+   Sum of absolute errors...............(safe)  = sum{over h}[|forecast - baseline|}.
+   Mean absolute error..................(mae)   = h^{-1}*sum{over h}[|forecast - baseline|}.
+   Sum of absolute percentage errors....(sape)  = 100*sum{over h}[|(forecast - baseline)/(baseline)|}.
+   Mean absolute percentage error.......(mape)  = 100*h^{-1}*sum{over h}[|(forecast-baseline)/(baseline)|}.
+   Symmetric mape version 1.............(smape1)= 100*h^{-1}*sum{over h}[(|forecast-baseline|)/((forecast+baseline)/2).
+   Symmetric mape version 2.............(smape2)= 100*h^(-1)*SUM{over h}[(|forecast-baseline |)/[|forecast|+|baseline|)/2.
+   Median absolute percentage error.....(mdape) = the midpoint mean absolute percentage error.
+
+{title:Caveats:}
+
+	When the forecast horizon is short, the sample size within this zone of analysis
+is also small, statistical tests of significance lose power to detect effects of small and even
+medium effect sizes.  The user should be aware of this problem in applying these tests. When
+forecast horizons are longer, the tests may have more statistical power.  For this reason, evaluation
+is commonly done for different lengths of forecast horizons.
+
+    When the forecast happens to be that of a straight line, as often is the case with differenced
+and moving average data generating processes, there may be no variation in the forecast over the 
+forecast horizon. This will generate missing values in tests that require each of the components 
+series to exhibit variance.  Therefore, under such circumstances, directional correlation analysis may
+yield missing data.  
+
+     {hi:Theil's U} is also used to compare the sum of squared forecast errors to the sum of
+squared errors of the naive forecast.  This yields a basis of comparison of the relative
+variance of the two measures.  
+
+{title:Returned Scalars: an example}
+ 
+             r(TheilU) =  1.011853075989136
+          r(normprobz) =  .6658824291023753
+              r(biasz) =  .4285714285714285
+                r(tpv) =  .2318254325607557
+            r(pairedt) =  1.228110691214871
+               r(sppv) =  .7868436161547346
+              r(spcor) =  .0582608695652174
+             r(afcorr) =  -.0865339632784439
+             r(smape3) =  126.1509701808294
+             r(smape2) =  435.5869125127792
+             r(smape1) =  -316.1066159009933
+              r(rmsfe) =  .0044029902795378
+               r(msfe) =  .000019386324228
+                r(sse) =  .0620023165652128
+               r(mape) =  120.0212142070134
+              r(mdape) =  88.6070671081543
+                r(mae) =  .0353902791296908
+               r(safe) =  .8493666991125792
+               r(twrp) =  .0198935366980754
+               r(twrf) =  4.705625252673014
+                 r(fh) =  24
+               r(seed) =  20202
+               
+where 
+      TheilU = Theil's U
+      normprobz = probability of the Sign-rank Z
+      biasz     = Z value of Sign rank forecast bias test
+      tpv       = Paired t-test p-value
+      pairedt   = Paired t-test t-value
+      spcor     = Spearman rank correlation coefficient
+      sppv      = Spearman rank correlation p-value
+      afcorr    = Pearson correlation coefficient
+      smape3    = Symmetric MAPE version 3
+      smape2    = Symmetric MAPE version 2
+      smape1    = Symmetric MAPE version 1
+      rmsfe     = root mean square forecast error
+      msfe      = mean square forecast error
+      sse       = sum of squared forecast errors
+      mape      = mean absolute percentage error
+      mdape     = median absolute percentage error
+      mae       = mean absolute error
+      safe      = sum of absolute forecast errors
+      twrp      = weak forecast rationality p-value
+      twrf      = weak forecast rationality joint F test
+      fh        = length of forecast horizon
+      seed      = seed used in generating random walk 
+
+            
+{title: Author}
+{phang} Robert Alan Yaffee, New York University, 2010 {break}
+yaffee@nyu.edu
+
+{title: Also see}
+   For out-of-estimation sample forecast evaluation: oforeval.ado, oforeval.hlp.
+
+{title: References}
+
+Armstrong, J. Scott (2001). {it:Evaluating Forecasting Methods} in Armstrong, J.Scott (ed.) 
+   {ul:Principles of Forecasting}. Klewer Academic Publishers, 443-473.
+Chatfield, C. (2000) {ul:Time-Series Forecasting}.  New York: Chapman & Hall/CRC, 68-69.
+Granger, C.W.J. and Newbold, P. (1986). {ul: Forecasting Economic Time Series}. 1st and 2nd eds.  
+    San Diego, CA: Academic Press, Inc., 1st ed. 56-59, 2nd ed: 276-313.
+Hendry, D.F. and Clements, M. (1999). {ul:Forecasting Non-Stationary Time Series}. 
+    Cambridge, MA: Cambridge University Press, 9-35,100-106, chapter 13.
+Hendry, D.F. and Ericsson, N. (eds.)(2001).{ul:Understanding Economic Forecasts}, 
+    Cambridge, MA: MIT Press, chapter two and five. 
+Holden, K., Peel, D.A., and Thompson, J.L. (1990). {ul:Economic Forecasting: an Introduction}. 
+    Cambridge, UK: Cambrige University Press, 29-41.
+Isiklar, G. and Kajal, L. {it:How far ahead can we forecast? Evidence from cross-country surveys},
+    {it:International Journal of Forecasting}, Elsevier, 23(2), 167-187.
+Makridakis, S., Wheelwright, S.C., and McGee, V.E. (1978).{ul: Forecasting: Methods and 
+    Applications}. 2nd ed. New York, NY: John Wiley and Sons, Inc., 43-61.
+Poon, Ser-Huang(2005).{ul: A Practical Guide to Forecasting Volatility}. New York: 
+    John Wiley and Sons, Inc., 23-24.
+Tsay, R.S. (2005). {ul:Analysis of Financial Time Series}. New York: John Wiley and Sons, Inc.
+
+
+
+

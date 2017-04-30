@@ -46,9 +46,24 @@ data4 = read.xlsx('time_series_data_2017.xlsx',4,rowIndex = 8:1761,colIndex = 1:
 
   ### Plot 1
   options(repr.plot.width=7, repr.plot.height=6)
+<<<<<<< Updated upstream
   plot(data1$observation_date, data1$UNRATE, xlab = 'Date', ylab = 'Unemployment', type='l')
   ### The plot reveals seasonality and a slight upward trend. 
 
+=======
+  plot(data1$observation_date, data1$UNRATE, xlab = 'Date', ylab = 'Unemployment Rate', type='l')
+  ### The plot reveals seasonality and a slight upward trend. 
+
+  ### Compute and plot log first differences
+  data1log = data1
+  data1log$UNRATE = log(data1log$UNRATE)
+  storediff <- diff(data1log$UNRATE, differences=1)
+  data1log <- data1log[-c(1), ]
+  data1log$UNRATE <- storediff
+  plot(data1log$observation_date, data1log$UNRATE, xlab = 'Date', ylab = 'Log First Differences Unemployment Rate', type='l')
+  
+  
+>>>>>>> Stashed changes
   ### Plot 2
   options(repr.plot.width=7, repr.plot.height=6)
   plot(data2$observation_date, data2$CPIAUCSL, xlab = 'Date', ylab = 'Consumer Price Index', type='l')
